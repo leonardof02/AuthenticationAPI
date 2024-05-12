@@ -1,0 +1,105 @@
+# This Project
+app.db
+app.db-shm
+app.db-wal
+
+# .NET Core
+bin/
+obj/
+out/
+*.suo
+*.user
+*.userosscache
+*.cache
+*.dll
+*.exe
+*.pdb
+*.nupkg
+*.bak
+*.tmp
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets.
+# For example, when installing the StyleCop.MSBuild NuGet package, it adds a build folder and a StyleCop.targets file at <packages>\StyleCop.MSBuild.4.7.49\build\
+!**/[Pp]ackages/*/build/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUNIT
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# Build Results of an ATL Project
+[Dd]ebugPS/
+[Rr]eleasePS/
+dlldata.c
+
+# DNX
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Tye
+.tye/
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+# Uncomment if you have tasks that create the project's static files in wwwroot
+#wwwroot/
+
+# Visual Studio 2017 auto generated files
+Generated\ Files/
+
+# TypeScript v1 declaration files
+typings/
+
+# Node.js Tools for Visual Studio
+.ntvs_analysis.dat
+node_modules/
+
+# Visual Studio and ReSharper restore and caches
+_ide/
+*.nuget.props
+*.nuget.targets
+*.DotSettings.user
+*.DotSettings
+
+# Azure DevOps pipeline cache (thanks to commenter "limpbizkit")
+!**/packages/*/build/
+
+# JetBrains Rider
+.idea/
+*.DotSettings.user
