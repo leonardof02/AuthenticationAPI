@@ -1,10 +1,14 @@
+using MiddleApi.Filters;
 using MiddleApi.Models;
 using MiddleApi.Services;
 using MiddleApi.Services.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    builder.Services.AddControllers();
+    builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<HttpResponseExceptionFilter>();
+});
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
@@ -16,23 +20,22 @@ var builder = WebApplication.CreateBuilder(args);
 
     // My Services
     builder.Services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
-
-    
 }
 // Add services to the container.
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseHttpsRedirection();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-{
-    app.UseHttpsRedirection();
-    app.UseAuthorization();
-    app.MapControllers();
-    app.Run();
-}
+
+app.UseExceptionHandler("/error");
+app.UseAuthorization();
+app.MapControllers();
+app.Run();

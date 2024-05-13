@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MiddleApi.Models;
 using BCrypt.Net;
+using MiddleApi.Exceptions;
 
 namespace MiddleApi.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
@@ -24,14 +24,20 @@ public class AuthenticationController : ControllerBase
     [Route("/register")]
     public async Task<IActionResult> Register(RegisterRequest registerRequest)
     {
-        var existingUser = await _appDbContext.Users.FirstOrDefaultAsync(user => user.Email == registerRequest.Email);
-        if (existingUser is not null) return BadRequest("User already exists");
+        var existingUser = await _appDbContext.Users
+            .FirstOrDefaultAsync(user => user.Email == registerRequest.Email);
+
+        if (existingUser is not null) throw new HttpResponseException(StatusCodes.Status400BadRequest, new
+        {
+            Message = "The user has already been registered"
+        });
 
         var newUser = new User
         {
             Email = registerRequest.Email,
             HashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(registerRequest.Password)
         };
+
         await _appDbContext.Users.AddAsync(newUser);
         await _appDbContext.SaveChangesAsync();
         var registerResponse = new RegisterResponse()
@@ -46,10 +52,19 @@ public class AuthenticationController : ControllerBase
     [Route("/login")]
     public async Task<IActionResult> Login(LoginRequest registerRequest)
     {
-        var existingUser = await _appDbContext.Users.FirstOrDefaultAsync(user => user.Email == registerRequest.Email);
-        if (existingUser is null) return BadRequest("The user not exists");
+        var existingUser = await _appDbContext.Users
+            .FirstOrDefaultAsync(user => user.Email == registerRequest.Email);
+
+        if (existingUser is null) throw new HttpResponseException(StatusCodes.Status400BadRequest, new
+        {
+            Message = "The email and password doesn't match"
+        });
+
         if (!BCrypt.Net.BCrypt.EnhancedVerify(registerRequest.Password, existingUser.HashedPassword))
-            return BadRequest("Email or Password Wrong");
+            throw new HttpResponseException(StatusCodes.Status400BadRequest, new
+            {
+                Message = "The email and password doesn't match"
+            });
         var loginResponse = new LoginResponse()
         {
             Email = existingUser.Email,
