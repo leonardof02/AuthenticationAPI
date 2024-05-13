@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     builder.Services.AddDbContext<ApplicationDbContext>();
+    builder.Services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 }
 // Add services to the container.
 

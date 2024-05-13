@@ -6,10 +6,10 @@ public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-    DbSet<User> Users { get; set; }
-    DbSet<Article> Articles { get; set; }
-    DbSet<UserData> UserDatas { get; set; }
-    DbSet<Topic> Topics { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Article> Articles { get; set; }
+    public DbSet<UserData> UserDatas { get; set; }
+    public DbSet<Topic> Topics { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
