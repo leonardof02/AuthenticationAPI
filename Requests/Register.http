@@ -4,6 +4,6 @@ POST {{HOST}}/register
 Content-Type: application/json
 
 {
-    "email": "leoqnardo23@gcom.com",
+    "email": "le796oqnardo23@gcom.com",
     "password": "pepegrillo"
 }

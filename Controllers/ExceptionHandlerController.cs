@@ -12,16 +12,6 @@ public class ErrorsController : ControllerBase
     public IActionResult Get()
     {
         var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
-
-        if (exceptionFeature?.Error is HttpResponseException httpResponseException)
-        {
-            return Problem(
-                title: httpResponseException.Value?.ToString(),
-                detail: httpResponseException.Message,
-                statusCode: httpResponseException.StatusCode
-            );
-        }
-
         return Problem(
             title: "Unknown error",
             detail: "An unknown error occurred",

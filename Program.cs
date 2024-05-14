@@ -6,9 +6,10 @@ using MiddleApi.Services.Configurations;
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<HttpResponseExceptionFilter>();
-});
+    {
+        options.Filters.Add<ExceptionFilter>();
+    });
+
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 

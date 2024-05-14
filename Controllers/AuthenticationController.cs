@@ -27,10 +27,8 @@ public class AuthenticationController : ControllerBase
         var existingUser = await _appDbContext.Users
             .FirstOrDefaultAsync(user => user.Email == registerRequest.Email);
 
-        if (existingUser is not null) throw new HttpResponseException(StatusCodes.Status400BadRequest, new
-        {
-            Message = "The user has already been registered"
-        });
+        if (existingUser is not null)
+            throw new HttpResponseException(StatusCodes.Status400BadRequest, "Email already in use");
 
         var newUser = new User
         {
@@ -55,16 +53,12 @@ public class AuthenticationController : ControllerBase
         var existingUser = await _appDbContext.Users
             .FirstOrDefaultAsync(user => user.Email == registerRequest.Email);
 
-        if (existingUser is null) throw new HttpResponseException(StatusCodes.Status400BadRequest, new
-        {
-            Message = "The email and password doesn't match"
-        });
+        if (existingUser is null) throw new HttpResponseException(StatusCodes.Status400BadRequest, "The email and password doesn't match"
+        );
 
         if (!BCrypt.Net.BCrypt.EnhancedVerify(registerRequest.Password, existingUser.HashedPassword))
-            throw new HttpResponseException(StatusCodes.Status400BadRequest, new
-            {
-                Message = "The email and password doesn't match"
-            });
+            throw new HttpResponseException(StatusCodes.Status400BadRequest, "The email and password doesn't match"
+            );
         var loginResponse = new LoginResponse()
         {
             Email = existingUser.Email,
