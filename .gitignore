@@ -3,6 +3,8 @@ app.db
 app.db-shm
 app.db-wal
 
+.env
+
 # .NET Core
 bin/
 obj/
