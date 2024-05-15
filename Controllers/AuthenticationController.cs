@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MiddleApi.Models;
-using BCrypt.Net;
 using MiddleApi.Exceptions;
 
 namespace MiddleApi.Controllers;
@@ -28,21 +27,27 @@ public class AuthenticationController : ControllerBase
             .FirstOrDefaultAsync(user => user.Email == registerRequest.Email);
 
         if (existingUser is not null)
-            throw new HttpResponseException(StatusCodes.Status400BadRequest, "Email already in use");
+            throw new HttpResponseException(
+                StatusCodes.Status400BadRequest,
+                "Email already in use"
+            );
 
         var newUser = new User
         {
             Email = registerRequest.Email,
-            HashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(registerRequest.Password)
+            HashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(registerRequest.Password),
+            EmailConfirmationCode = new Random().Next(1000, 10000).ToString()
         };
 
         await _appDbContext.Users.AddAsync(newUser);
         await _appDbContext.SaveChangesAsync();
+
         var registerResponse = new RegisterResponse()
         {
             Email = newUser.Email,
-            HashedPassword = newUser.HashedPassword
+            Message = $"We have sent an email to {newUser.Email}, go there and verify your account"
         };
+
         return Ok(registerResponse);
     }
 
@@ -53,17 +58,30 @@ public class AuthenticationController : ControllerBase
         var existingUser = await _appDbContext.Users
             .FirstOrDefaultAsync(user => user.Email == registerRequest.Email);
 
-        if (existingUser is null) throw new HttpResponseException(StatusCodes.Status400BadRequest, "The email and password doesn't match"
-        );
+        if (existingUser is null)
+            throw new HttpResponseException(
+                StatusCodes.Status400BadRequest,
+                "The email and password doesn't match"
+            );
+
+        if(existingUser.EmailConfirmed == false)
+            throw new HttpResponseException(
+                StatusCodes.Status400BadRequest,
+                "User not verified by email"
+            );
 
         if (!BCrypt.Net.BCrypt.EnhancedVerify(registerRequest.Password, existingUser.HashedPassword))
-            throw new HttpResponseException(StatusCodes.Status400BadRequest, "The email and password doesn't match"
+            throw new HttpResponseException(
+                StatusCodes.Status400BadRequest,
+                "The email and password doesn't match"
             );
+        
         var loginResponse = new LoginResponse()
         {
             Email = existingUser.Email,
             Token = _tokenGenerator.GenerateUserToken(existingUser.Id)
         };
+
         return Ok(loginResponse);
     }
 }

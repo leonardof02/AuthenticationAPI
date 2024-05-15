@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services.AddControllers(options =>
     {
-        options.Filters.Add<ExceptionFilter>();
+        // options.Filters.Add<ExceptionFilter>();
     });
 
     builder.Services.AddEndpointsApiExplorer();
@@ -28,6 +28,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
+app.UseExceptionHandler("/error");
 
 if (app.Environment.IsDevelopment())
 {
@@ -36,7 +37,6 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.UseExceptionHandler("/error");
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
